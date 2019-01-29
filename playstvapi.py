@@ -143,7 +143,7 @@ class PlaysTV:
         # Return the array populated or not
         return saved_videos
 
-    # All user API calls
+# All user API calls
 
     # Gets the user id from an inputted username
     def get_user_id( self, username ):
@@ -255,11 +255,260 @@ class PlaysTV:
         else:
             return False
 
-    # Sends a request to cancle friend request to a user from their ID
-    def cancle_friend_request_user(self, user_id):
+    # Sends a request to cancel friend request to a user from their ID
+    def cancel_friend_request_user(self, user_id):
 
         # Send a post request with an updated nonce and corresponding cookies
         r = requests.post( self.baseurl + 'user/friend_cancel_request', data={ 'obj_type': 'user', 'obj_id': user_id, "nonce": self.get_nonce() }, cookies=self.saved_cookies )
+
+        # Check if it was successfully executed
+        if( r.status_code == 200 ):
+            return True
+        else:
+            return False
+    
+    # Sends a request to accept a  friend request from a user from their ID
+    def friend_request_accept_user(self, user_id):
+
+        # Send a post request with an updated nonce and corresponding cookies
+        r = requests.post( self.baseurl + 'user/friend_accept', data={ 'obj_type': 'user', 'obj_id': user_id, "nonce": self.get_nonce() }, cookies=self.saved_cookies )
+
+        # Check if it was successfully executed
+        if( r.status_code == 200 ):
+            return True
+        else:
+            return False
+
+    # Sends a request to unfriend a user from their ID
+    def unfriend_user(self, user_id):
+
+        # Send a post request with an updated nonce and corresponding cookies
+        r = requests.post( self.baseurl + 'user/unfriend', data={ 'obj_type': 'user', 'obj_id': user_id, "nonce": self.get_nonce() }, cookies=self.saved_cookies )
+
+        # Check if it was successfully executed
+        if( r.status_code == 200 ):
+            return True
+        else:
+            return False
+
+# All comment API calls
+
+    # Sends a request to comment on a video
+    def create_comment(self, feedid, comment):
+
+        # Send a post request with an updated nonce and corresponding cookies
+        r = requests.post( self.baseurl + 'comment/create', data={ 'comment': comment, 'feed_id': feedid, "nonce": self.get_nonce() }, cookies=self.saved_cookies )
+
+        # Check if it was successfully executed
+        if( r.status_code == 200 ):
+            return True
+        else:
+            return False
+
+    # Sends a request to delete a comment
+    def delete_comment(self, commentid):
+
+        # Send a post request with an updated nonce and corresponding cookies
+        r = requests.post( self.baseurl + 'comment/delete', data={ 'comment_id': commentid, "nonce": self.get_nonce() }, cookies=self.saved_cookies )
+
+        # Check if it was successfully executed
+        if( r.status_code == 200 ):
+            return True
+        else:
+            return False
+
+    # Sends a request to like a comment
+    def like_comment(self, feedid, commentid):
+
+        # Send a post request with an updated nonce and corresponding cookies
+        r = requests.post( self.baseurl + 'comment/like', data={ 'comment_id': commentid, 'feed_id': feedid, "nonce": self.get_nonce() }, cookies=self.saved_cookies )
+
+        # Check if it was successfully executed
+        if( r.status_code == 200 ):
+            return True
+        else:
+            return False
+
+    # Sends a request to report a comment
+    def report_comment(self, commentid):
+
+        # Send a post request with an updated nonce and corresponding cookies
+        r = requests.post( self.baseurl + 'comment/report', data={ 'comment_id': commentid, "nonce": self.get_nonce() }, cookies=self.saved_cookies )
+
+        # Check if it was successfully executed
+        if( r.status_code == 200 ):
+            return True
+        else:
+            return False        
+
+    # Sends a request to get a comment and will return a string, untested though
+    def get_comment(self, commentid):
+
+        # Send a post request with an updated nonce and corresponding cookies
+        r = requests.post( self.baseurl + 'comment/get', data={ 'comment_id': commentid, "nonce": self.get_nonce() }, cookies=self.saved_cookies )
+
+        # Check if it was successfully executed
+        if( r.status_code == 200 ):
+            return True
+        else:
+            return False   
+
+# All account API calls
+
+    # Main function to call account update, called by other functions below which are more specific
+    def account_update( self, quote, email=None, new_password=None, cur_password=None ):
+
+        # Send a post request with an updated nonce and corresponding cookies
+        r = requests.post( self.baseurl + 'account/update', data={ 'email': self.email if email == None else email, 'password_cur': "" if cur_password == None else cur_password, 'password_new': '' if new_password==None else new_password, 'password_again': '' if new_password == None else new_password, 'quote': quote, 'ignore_pwd_change': '1' if new_password == None else '0', 'format': 'json', "nonce": self.get_nonce() }, cookies=self.saved_cookies )
+
+        # Check if it was successfully executed
+        if( r.status_code == 200 and r.json()['msg'] == 'reposted' ):
+            return True
+        else:
+            return False
+
+    # Change the email of the account
+    def account_update_email(self, email):
+
+        # Check if it was successfully executed
+        if( self.account_update( '', email ) ):
+            return True
+        else:
+            return False
+
+    # Change the password of the account
+    def account_update_password(self, current_password, new_password):
+
+        # Check if it was successfully executed
+        if( self.account_update( '', None, new_password, current_password ) ):
+            return True
+        else:
+            return False
+
+    # Update the profiles bio
+    def account_update_quote(self, quote):
+
+        # Check if it was successfully executed
+        if( self.account_update( quote ) ):
+            return True
+        else:
+            return False
+
+    # Request to send a password reset email
+    def account_reset_password_email(self, email):
+
+        # Send a post request with an updated nonce and corresponding cookies
+        r = requests.post( self.baseurl + 'account/reset_password_email', data={ 'email': email, 'format': 'json' } )
+
+        # Check if it was successfully executed
+        if( r.status_code == 200 ):
+            return True
+        else:
+            return False
+
+    # Sends a request to check if a user has a valid email e.g. not already has an account signed
+    def account_validate_email(self, email):
+
+        # Send a post request with an updated nonce and corresponding cookies
+        r = requests.post( self.baseurl + 'account/validate_email', data={ 'email': email } )
+
+        # Check if it was successfully executed
+        if( r.status_code == 200 ):
+            return True
+        else:
+            return False
+
+    # Sends a request to check if a user has a valid username e.g. not already created
+    def account_validate_username(self, username):
+
+        # Send a post request with an updated nonce and corresponding cookies
+        r = requests.post( self.baseurl + 'account/validate_username', data={ 'name': username } )
+
+        # Check if it was successfully executed
+        if( r.status_code == 200 ):
+            return True
+        else:
+            return False
+
+# All video API calls
+
+    # Reposts a video via the feed id
+    def repost_video(self, feedid):
+
+        # Send a post request with an updated nonce and corresponding cookies
+        r = requests.post( self.baseurl + 'video/repost', data={ 'feed_id': feedid, "nonce": self.get_nonce() }, cookies=self.saved_cookies )
+
+        # Check if it was successfully executed
+        if( r.status_code == 200 and r.json()['msg'] == 'reposted' ):
+            return True
+        else:
+            return False
+
+    # Reacts to a video this is usually a small emoji below the video
+    def react_to_video(self, feedid, emoji):
+
+        # Send a post request with an updated nonce and corresponding cookies
+        r = requests.post( self.baseurl + 'video/react', data={ 'id': feedid, "emoji_shortname": emoji, "list_type": "limited", "nonce": self.get_nonce() }, cookies=self.saved_cookies )
+
+        # Check if it was successfully executed
+        if( r.status_code == 200 ):
+            return True
+        else:
+            return False
+
+    # Changes the privacy of a video, public an hidden are the two
+    def set_privacy_video(self, feedid, private):
+
+        # Send a post request with an updated nonce and corresponding cookies
+        r = requests.post( self.baseurl + 'video/privacy', data={ 'feed_id': feedid, "privacy": private, "nonce": self.get_nonce() }, cookies=self.saved_cookies )
+
+        # Check if it was successfully executed
+        if( r.status_code == 200 ):
+            return True
+        else:
+            return False
+
+    # Edits the videos title
+    def edit_video_description(self, feedid, description):
+
+        # Send a post request with an updated nonce and corresponding cookies
+        r = requests.post( self.baseurl + 'video/edit_description', data={ 'feed_id': feedid, "description": description, "nonce": self.get_nonce() }, cookies=self.saved_cookies )
+
+        # Check if it was successfully executed
+        if( r.status_code == 200 ):
+            return True
+        else:
+            return False
+
+    # Gets information about the uploaded post
+    def get_video_meta(self, feedid):
+
+        # Send a post request with an updated nonce and corresponding cookies
+        r = requests.post( self.baseurl + 'video/get_video_meta', data={ 'feed_id': feedid, "nonce": self.get_nonce() }, cookies=self.saved_cookies )
+
+        # Check if it was successfully executed
+        if( r.status_code == 200 ):
+            return r.json()
+        else:
+            return False
+
+    # Returns a list of who liked the video
+    def get_who_liked_video(self, feedid):
+
+        # Send a post request with an updated nonce and corresponding cookies
+        r = requests.post( self.baseurl + 'video/who_liked', data={ 'feed_id': feedid, "nonce": self.get_nonce() }, cookies=self.saved_cookies )
+
+        # Check if it was successfully executed
+        if( r.status_code == 200 ):
+            return r.json()
+        else:
+            return False
+
+    # Will delete a video
+    def delete_video(self, feedid):
+
+        # Send a post request with an updated nonce and corresponding cookies
+        r = requests.post( self.baseurl + 'video/delete', data={ 'feed_id': feedid, "nonce": self.get_nonce() }, cookies=self.saved_cookies )
 
         # Check if it was successfully executed
         if( r.status_code == 200 ):
