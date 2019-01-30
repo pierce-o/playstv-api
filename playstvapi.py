@@ -52,7 +52,10 @@ class PlaysTV:
         r = requests.post( self.baseurl + 'login', data={ 'urlname': username, 'pwd': password, 'format': 'json' } )
 
         if(r.status_code == 200): # The request was successfully sent
-            self.saved_cookies = r.cookies
+
+            for cookie in r.cookies:
+                self.saved_cookies[cookie.name] = cookie.value
+
             return r.json()
 
     # Returns your own, currently logged in account, user id
@@ -107,9 +110,9 @@ class PlaysTV:
             return None
 
     # Get all of the a users videos, currently only the logged in user, which are public
-    def get_public_videos(self, userid):
+    def get_public_videos(self, userid, items=99999):
         
-        r = requests.get( self.baseurl + 'orbital/videos?user_id=' + userid + '&itemsPerPage=99999&videoType=regVideos' )
+        r = requests.get( self.baseurl + 'orbital/videos?user_id=' + userid + '&itemsPerPage=' + items + '&videoType=regVideos' )
 
         # Make sure the get request was successful
         if (r.status_code == 200 ):
@@ -118,9 +121,9 @@ class PlaysTV:
             return None
 
     # Get all of the a users videos, currently only the logged in user, which are public
-    def get_private_videos(self, userid):
+    def get_private_videos(self, userid, items=99999):
         
-        r = requests.get( self.baseurl + 'orbital/videos?user_id=' + userid + '&itemsPerPage=99999&videoType=hiddenVideos' )
+        r = requests.get( self.baseurl + 'orbital/videos?user_id=' + userid + '&itemsPerPage=' + items + '&videoType=hiddenVideos' )
 
         # Make sure the get request was successful
         if (r.status_code == 200 ):
@@ -402,7 +405,7 @@ class PlaysTV:
 
         # Check if it was successfully executed
         if( r.status_code == 200 ):
-            return True
+            return r.json()
         else:
             return False
 
@@ -414,7 +417,7 @@ class PlaysTV:
 
         # Check if it was successfully executed
         if( r.status_code == 200 ):
-            return True
+            return r.json()
         else:
             return False
 
@@ -426,7 +429,7 @@ class PlaysTV:
 
         # Check if it was successfully executed
         if( r.status_code == 200 ):
-            return True
+            return r.json()
         else:
             return False
 
