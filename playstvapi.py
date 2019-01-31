@@ -112,7 +112,7 @@ class PlaysTV:
     # Get all of the a users videos, currently only the logged in user, which are public
     def get_public_videos(self, userid, items=99999):
         
-        r = requests.get( self.baseurl + 'orbital/videos?user_id=' + userid + '&itemsPerPage=' + items + '&videoType=regVideos' )
+        r = requests.get( self.baseurl + 'orbital/videos?user_id=' + userid + '&itemsPerPage=' + str(items) + '&videoType=regVideos' )
 
         # Make sure the get request was successful
         if (r.status_code == 200 ):
@@ -120,10 +120,19 @@ class PlaysTV:
         else:
             return None
 
+    def get_video_url( self, feedid ):
+
+        r = requests.post( self.baseurl + "orbital/video/" + feedid )
+
+        if( r.status_code == 200 ):
+            return r.json()
+        else:
+            return None
+
     # Get all of the a users videos, currently only the logged in user, which are public
     def get_private_videos(self, userid, items=99999):
         
-        r = requests.get( self.baseurl + 'orbital/videos?user_id=' + userid + '&itemsPerPage=' + items + '&videoType=hiddenVideos' )
+        r = requests.get( self.baseurl + 'orbital/videos?user_id=' + userid + '&itemsPerPage=' + str(items) + '&videoType=hiddenVideos' )
 
         # Make sure the get request was successful
         if (r.status_code == 200 ):
