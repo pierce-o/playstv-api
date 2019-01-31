@@ -5,11 +5,17 @@ An unofficial API designed and built in python and aims to interact with the pla
 # Usage
 The usage is very simple and will start with importing the library and then creating an new object with the `PlaysTV` class
 
-`from playstvapi import *`
+```python
+from playstvapi import *
+```
 Then to create a new instance of the playstv object you will need to have this. The constructor takes 2 arguments, the username and the password of the account you are trying to login to. 
-`playstv = PlaysTV( 'username', 'password' )`
+```python
+playstv = PlaysTV( 'username', 'password' )
+```
 This will log the user in but wont extract the data from the returned JSON object, so the next thing to do is to get the information out of the JSON object and is done like so.
-`playstv.get_data_from_login_response()`
+```python
+playstv.get_data_from_login_response()
+```
 That's all that needs to be done to setup the base for your project and the functions can then be accessed from the playstv object.
 
 # Documentation
