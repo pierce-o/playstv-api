@@ -30,6 +30,8 @@ This function will take all the useful data from the login response and save it 
 This will return the unique nonce that is created when a user logs into the website. This nonce is tied to certain cookies linking it to only be used on your account in that session. This information is stored as an attribute in any page on the website under the `<html>` element in a JSON format.
 ### get_profile_information
 This will send a request to get information from a users profile, by user_id not username, and will return a JSON object that contains information about the user, user_id and more, as well as the recently, top 12, videos uploaded by the user.
+### get_video_info
+This function will return a JSON object that contains all the relevant data about the video from the supplied feed id.
 ### get_public_videos
 This function will return a JSON object that contains all the relevant data about all the videos video. This can have a high number of videos as by default it will get ALL public videos however, if you only want to get a certain amount of videos there is a second argument that defaults at 99999.
 ### get_private_videos
@@ -92,3 +94,9 @@ This will return information about an uploaded video such as length, time upload
 This function will return a JSON object of who has liked a video and takes one argument which is the feed id.
 ### delete_video
 This function will send a request to delete a video and takes one argument which is the feed id of the video that wants to be deleted.
+
+# Dependencies
+### Python Libraries
+ - requests
+ - lxml
+ - json
