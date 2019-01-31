@@ -120,7 +120,7 @@ class PlaysTV:
         else:
             return None
 
-    def get_video_url( self, feedid ):
+    def get_video_info( self, feedid ):
 
         r = requests.post( self.baseurl + "orbital/video/" + feedid )
 
